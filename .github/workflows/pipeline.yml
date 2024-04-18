@@ -1,0 +1,39 @@
+name: ERP_SUITS 
+ 
+on: 
+workflow_dispatch
+ 
+jobs:
+  test:
+    runs-on: 
+    ubuntu-latest
+ 
+    steps:
+      - name: Checkout Repository
+        # run: echo Fazendo clone do repositorio na maquina virtual
+        uses: actions/checkout@v4
+ 
+      - name: Set up Python
+        # run: echo Instalação da versão 3.12 do Python
+        uses: actions/setup-python@v
+        with:
+          python-version: '3.12'
+ 
+      - name: Install dependencies
+        # run: echo Instalação das depedências do Projeto
+        run: |
+          pip install robotframework
+          pip install robotframework-requests
+ 
+      - name: Run Robot Framework tests
+        # run: echo Executando os testes de API do Robot
+        run: |
+          robot --outputdir / tests/
+
+      - name: Test Report
+        # run: echo Salvando o Report dos Testes
+        uses: actions/upload-artifact@v4
+        with:
+          name: robot-framework-report
+          path: results/**
+
