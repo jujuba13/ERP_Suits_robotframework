@@ -28,7 +28,7 @@ jobs:
       - name: Run Robot Framework tests
         # run: echo Executando os testes de API do Robot
         run: |
-          robot --outputdir /results tests/
+          robot --outputdir results/ tests/
 
       - name: Test Report
         # run: echo Salvando o Report dos Testes
