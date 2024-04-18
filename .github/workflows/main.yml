@@ -15,7 +15,7 @@ jobs:
  
       - name: Set up Python
         # run: echo Instalação da versão 3.12 do Python
-        uses: actions/setup-python@v
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
  
