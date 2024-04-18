@@ -1,0 +1,78 @@
+*** Settings ***
+Documentation   Objetivo realizar testes de API
+Library        RequestsLibrary
+Library        String
+Library        Collections
+
+
+*** Variables ***
+${API_URL}          https://suits.qacoders-academy.com.br
+${ADMIN_EMAIL}      sysadmin@qacoders.com
+${ADMIN_PASSWORD}   1234@Test
+             
+
+
+
+*** Keywords ***
+Criar Sessão
+    ${headers}=    Create Dictionary    Accept=application/json    Content-Type=application/json   Authorization=${TOKEN}
+     
+    Create Session    alias=SuitsERP    url=${API_URL}    headers=${headers}      
+
+Logar ADMIN
+    ${body}=    Create Dictionary    mail=${ADMIN_EMAIL}    password=${ADMIN_PASSWORD}
+    Log    ${body}
+    Criar Sessão
+    ${resposta}=    POST On Session    alias=SuitsERP    url=/api/login/    json=${body}
+    Log    ${resposta.json()}
+    Set Test Variable  ${TOKEN}     ${resposta.json()['token']} 
+    Set Test Variable    ${RESPOSTA}           ${resposta.json()}
+    Log    ${TOKEN}
+
+
+Verificar a validação e a gravação do token
+    ${headers}=    Create Dictionary    Authorization=Bearer ${TOKEN}
+    ${resposta}=    GET On Session    alias=SuitsERP    url=/api/validateToken    headers=${headers}
+    Log    Resposta da solicitação: ${resposta.content}
+    Log    Token: ${TOKEN}
+
+
+Cadastro de usuário
+    ${palavra_randomica}=    Generate Random String    length=50    chars=LETTERS
+    ${palavra_randomica_email}=    Generate Random String    length=10    chars=\[LETTERS]\[NUMBERS]
+    ${palavra_randomica_cpf}=     Generate Random String    length=11   chars=[NUMBERS]
+    ${palavra_randomica}=    Convert To Lower Case    ${palavra_randomica}
+    ${palavra_randomica_email}=    Convert To Lower Case    ${palavra_randomica_email}
+
+    Set Test Variable    ${FULLNAME}    ${palavra_randomica}
+    Log    ${FULLNAME}
+    Set Test Variable    ${EMAIL}    ${palavra_randomica_email}@gmail.com
+    Log    ${EMAIL}
+    Set Test Variable    ${CPF}    ${palavra_randomica_cpf}
+    Log    ${CPF}
+
+    ${body}=    Create Dictionary
+    ...    fullName=Juliana Franca
+    ...    mail=${EMAIL}
+    ...    password=1234@Teste
+    ...    accessProfile=ADMIN
+    ...    cpf=${CPF}
+    ...    confirmPassword=1234@Teste   # Corrigido para ser igual à senha
+
+    Log    ${body}
+
+    # Enviar solicitação POST para cadastrar usuário
+    ${resposta}=    Post On Session    alias=SuitsERP    url=/api/user/    json=${body}    expected_status=201
+    Log    ${resposta.json()}
+    ${resposta.json()}=    Evaluate    json.loads($resposta.content)    json    
+    Log    ${resposta.json()}  
+       
+   Set Test Variable      ${ID_USER}      ${resposta.json()["user"]["_id"]}
+    Log    ${ID_USER}    
+    Set Test Variable    ${RESPOSTA}      ${resposta.json()}   
+    
+Verificar se o usuário foi cadastrado com sucesso
+    Log     ${RESPOSTA}
+   Dictionary Should Contain Item     ${RESPOSTA}      msg      Olá Juliana Franca, cadastro realizado com sucesso.  
+   Dictionary Should Contain Key     ${RESPOSTA}       user     _id
+  
