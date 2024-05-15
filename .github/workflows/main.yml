@@ -56,7 +56,7 @@ jobs:
       id-token: write
     environment:
       name: github-pages
-      url: https://jujuba13.github.io/suits-academy-api-robot/Report.html
+      url: https://jujuba13.github.io/suits-academy-api-robot/report.html
     steps:
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -64,7 +64,7 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
-          name: report
+          name: robot-framework-report
  
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
