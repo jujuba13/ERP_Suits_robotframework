@@ -56,7 +56,7 @@ jobs:
       id-token: write
     environment:
       name: github-pages
-      url: https://jujuba13.github.io/suits-academy-api-robot/report.html
+      url: https://juliana-souza-franca.github.io/suits-academy-api-robot/report.html
     steps:
       - name: Setup Pages
         uses: actions/configure-pages@v5

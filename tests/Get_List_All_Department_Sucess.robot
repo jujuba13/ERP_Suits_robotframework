@@ -7,7 +7,7 @@ ${TOKEN}
 
 *** Test Cases ***
  
-Cenario com Post: Liatr todos os Departmento
+Cenario com Post: Listar todos os Departmento
    Criar sessão
    Logar ADMIN
    Cadastro de usuário
